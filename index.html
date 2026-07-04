@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¡Feliz Cumpleaños!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose: #e8637a;
+      --blush: #f9c4cc;
+      --gold: #c9a96e;
+      --cream: #fdf6ee;
+      --deep: #1a0a12;
+      --mauve: #7a3f52;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+      background: var(--deep);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse at 20% 30%, #3b0d24 0%, #1a0a12 60%),
+                  radial-gradient(ellipse at 80% 70%, #2a0f1e 0%, transparent 60%);
+    }
+
+    /* Floating petals */
+    .petal-layer { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+    .petal {
+      position: absolute;
+      width: 10px; height: 14px;
+      border-radius: 0 60% 0 60%;
+      opacity: 0;
+      animation: fallPetal linear infinite;
+    }
+    @keyframes fallPetal {
+      0%   { transform: translateY(-30px) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── SCENE ── */
+    .scene {
+      position: relative; z-index: 2;
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    /* ── ORNAMENT RING ── */
+    .ring-wrap {
+      position: relative;
+      width: 220px; height: 220px;
+      margin: 0 auto 40px;
+    }
+    .ring {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold);
+      position: absolute;
+      animation: rotateSlow 20s linear infinite;
+      box-shadow: 0 0 30px rgba(201,169,110,0.2), inset 0 0 30px rgba(201,169,110,0.05);
+    }
+    .ring::before, .ring::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(201,169,110,0.4);
+    }
+    .ring::before { width: 90%; height: 90%; }
+    .ring::after  { width: 78%; height: 78%; border-color: rgba(232,99,122,0.3); }
+    @keyframes rotateSlow { to { transform: rotate(360deg); } }
+
+    /* Diamond dots on ring */
+    .dot {
+      position: absolute;
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      box-shadow: 0 0 8px var(--gold);
+    }
+
+    /* Emoji in center */
+    .center-emoji {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 64px;
+      animation: pulse 2.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(232,99,122,0.6));
+    }
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%       { transform: translate(-50%, -50%) scale(1.08); }
+    }
+
+    /* ── HEADER ── */
+    .eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.3s;
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.05;
+      margin: 10px 0 6px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
+      text-shadow: 0 0 60px rgba(232,99,122,0.3);
+    }
+    .title em {
+      font-style: italic;
+      color: var(--rose);
+      display: block;
+    }
+
+    .subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: var(--blush);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.7s;
+      margin-bottom: 36px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 16px;
+      width: 100%; max-width: 480px;
+      margin: 0 auto 36px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.9s;
+    }
+    .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .divider-icon { color: var(--gold); font-size: 1rem; }
+
+    /* ── MESSAGE CARD ── */
+    .card {
+      max-width: 560px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 4px;
+      padding: 40px 48px;
+      position: relative;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.1s;
+      backdrop-filter: blur(10px);
+    }
+    .card::before, .card::after {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+      border-color: var(--gold);
+      border-style: solid;
+      opacity: 0.6;
+    }
+    .card::before { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+    .card::after  { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+
+    .card p {
+      font-size: 1.15rem;
+      line-height: 1.85;
+      color: rgba(253,246,238,0.85);
+      font-weight: 300;
+    }
+    .card p em { color: var(--blush); font-style: italic; }
+    .card p strong { color: var(--gold); font-weight: 400; }
+
+    /* ── SIGNATURE ── */
+    .signature {
+      margin-top: 32px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--blush);
+      letter-spacing: 0.1em;
+      line-height: 1.9;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.5s;
+    }
+    .signature .names {
+      display: block;
+      font-style: normal;
+      font-size: 0.88rem;
+      color: var(--gold);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    /* ── CANDLES ROW ── */
+    .candles {
+      display: flex; gap: 18px; margin-top: 48px; align-items: flex-end;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.7s;
+    }
+    .candle { display: flex; flex-direction: column; align-items: center; }
+    .flame {
+      width: 10px; height: 16px;
+      background: radial-gradient(ellipse at 50% 80%, #fff7a0 0%, #ffb347 40%, #e8637a 80%, transparent 100%);
+      border-radius: 50% 50% 20% 20%;
+      animation: flicker 1.2s ease-in-out infinite alternate;
+      filter: blur(0.5px);
+      margin-bottom: 1px;
+    }
+    @keyframes flicker {
+      from { transform: scaleX(1) scaleY(1) rotate(-2deg); }
+      to   { transform: scaleX(0.85) scaleY(1.1) rotate(2deg); filter: blur(1px); }
+    }
+    .candle-body {
+      width: 14px; height: 52px;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .candle-body::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(255,255,255,0.25) 20%, transparent 60%);
+    }
+    .wick { width: 2px; height: 6px; background: #3a2a1a; margin-bottom: 0; }
+
+    /* ── BACKGROUND IMAGE ── */
+    .bg-image {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url('/IMG-20260630-WA0113.jpg'); /* 👈 Cambia esto por el nombre de tu imagen */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.18; /* Ajusta la transparencia a tu gusto (0.0 = invisible, 1.0 = completa) */
+    }
+
+    /* ── UTILITIES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Sparkle stars */
+    .stars { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; transform: scale(1); }
+      50%       { opacity: 0.9; transform: scale(1.8); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg"></div>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Falling petals -->
+<div class="petal-layer" id="petals"></div>
+
+<!-- Imagen de fondo personalizada -->
+<div class="bg-image"></div>
+
+<!-- Main scene -->
+<div class="scene">
+
+  <!-- Ornamental ring -->
+  <div class="ring-wrap">
+    <div class="ring" id="ring"></div>
+    <div class="center-emoji">🌺</div>
+  </div>
+
+  <!-- Heading -->
+  <p class="eyebrow">Para ti, en tu día especial</p>
+  <h1 class="title">Feliz<em>Cumpleaños</em></h1>
+  <p class="subtitle">Mi amiga especial ✨</p>
+
+  <!-- Divider -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span class="divider-icon">❋</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- Message card -->
+  <div class="card">
+    <p>
+      Hoy el universo celebra con flores y luz que tú llegaste al mundo.<br /><br />
+      Que este día esté lleno de momentos <em>dorados</em>, de risas que no quieras
+      olvidar y de todo aquello que tu corazón desea.<br /><br />
+      Eres <strong>extraordinaria</strong> — una persona que ilumina cada espacio
+      en el que entra, y el mundo es infinitamente mejor contigo en él.<br /><br />
+      ¡<em>Que lo celebres como la reina que eres!</em> 🌹
+    </p>
+  </div>
+
+  <!-- Signature -->
+  <p class="signature">— Con todo el cariño del mundo 💛<span class="names">De: Andrés José &nbsp;·&nbsp; Para: Adriana Lucia</span></p>
+
+  <!-- Candles -->
+  <div class="candles" id="candles"></div>
+
+</div>
+
+<script>
+  /* ── STARS ── */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      animation-duration:${2+Math.random()*3}s;
+      animation-delay:${Math.random()*4}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  /* ── PETALS ── */
+  const colors = ['#e8637a','#f9c4cc','#c9a96e','#f4a4b0','#fdf6ee'];
+  const petalsEl = document.getElementById('petals');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const c = colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      background:${c};
+      animation-duration:${6+Math.random()*8}s;
+      animation-delay:${Math.random()*8}s;
+      width:${8+Math.random()*6}px;
+      height:${10+Math.random()*8}px;
+      opacity:0.5;
+    `;
+    petalsEl.appendChild(p);
+  }
+
+  /* Imagen de fondo: coloca tu imagen en la misma carpeta que este HTML
+     y cambia 'TU_IMAGEN_AQUI.jpg' en el CSS por el nombre exacto de tu archivo */
+
+  /* ── RING DOTS ── */
+  const ring = document.getElementById('ring');
+  const dotCount = 12;
+  for (let i = 0; i < dotCount; i++) {
+    const angle = (i / dotCount) * 2 * Math.PI;
+    const r = 50; // % radius
+    const x = 50 + r * Math.cos(angle);
+    const y = 50 + r * Math.sin(angle);
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.style.cssText = `
+      top:${y}%; left:${x}%;
+      transform:translate(-50%,-50%);
+      ${i % 3 === 0 ? 'width:8px;height:8px;' : 'width:4px;height:4px;opacity:0.5;'}
+    `;
+    ring.appendChild(d);
+  }
+
+  /* ── CANDLES ── */
+  const candleColors = [
+    ['#e8637a','#c94060'],
+    ['#c9a96e','#a07840'],
+    ['#f9c4cc','#d08090'],
+    ['#a782c3','#7850a0'],
+    ['#6cbad4','#3a90b0'],
+  ];
+  const candlesEl = document.getElementById('candles');
+  const heights = [52, 64, 48, 70, 56, 44, 60];
+  for (let i = 0; i < 7; i++) {
+    const cc = candleColors[i % candleColors.length];
+    const h = heights[i];
+    candlesEl.innerHTML += `
+      <div class="candle">
+        <div class="flame" style="animation-delay:${Math.random()*0.8}s"></div>
+        <div class="wick"></div>
+        <div class="candle-body" style="height:${h}px;background:linear-gradient(to bottom,${cc[0]},${cc[1]})"></div>
+      </div>`;
+  }
+</script>
+</body>
+</html>
