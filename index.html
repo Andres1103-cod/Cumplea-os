@@ -243,13 +243,22 @@
     .wick { width: 2px; height: 6px; background: #3a2a1a; margin-bottom: 0; }
 
     /* ── BACKGROUND IMAGE ── */
-    .bg-image {
+    /*.bg-image {
       position: fixed; inset: 0; z-index: 0;
       background-image: url('IMG-20260630-WA0113.jpg'); 
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.18; /* Ajusta la transparencia a tu gusto (0.0 = invisible, 1.0 = completa) */
+      opacity: 0.18; /* Ajusta la transparencia a tu gusto (0.0 = invisible, 1.0 = completa)
+    }*/
+
+    .bg-image {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url('IMG-20260630-WA0113.jpg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.18;
     }
 
     /* ── UTILITIES ── */
